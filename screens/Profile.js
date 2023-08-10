@@ -7,29 +7,41 @@ import {
   Pressable,
   ScrollView,
   TextInput,
+  Image,
+  // Checkbox,
 } from "react-native";
 import Constants from "expo-constants";
-import { Switch } from "react-native-paper";
+import { Checkbox } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
 
 import useUpdate from "../utils/useUpdate";
 import { AuthContext } from "../context/AuthContext";
-import { AUTH_KEY, retrieveData, storeData } from "../utils/asyncStore";
+import { AUTH_KEY, retrieveData, storeData, DEFAULT_STATE } from "../utils/asyncStore";
 import { validateUSPhoneNumber } from "../utils/validateUSPhoneNumber";
 
 export default function ProfileScreen() {
-  const [preferences, setPreferences] = useState({
-    pushNotifications: false,
-    emailMarketing: false,
-    latestNews: false,
-  });
-  const [form, setForm] = React.useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    email: "",
-  });
+  const [form, setForm] = React.useState(DEFAULT_STATE);
   const { signOut } = React.useContext(AuthContext);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      handleChange("image", result.assets[0].uri);
+    }
+  };
+
+  const removeImage = () => {
+    handleChange("image", null);
+  };
 
   React.useEffect(() => {
     const getUserProfile = async () => {
@@ -47,44 +59,38 @@ export default function ProfileScreen() {
     getUserProfile();
   }, []);
 
-  useEffect(() => {
-    // Populating preferences from storage using AsyncStorage.multiGet
-    (async () => {
-      try {
-        const values = await AsyncStorage.multiGet(Object.keys(preferences));
-        const initialState = values.reduce((acc, curr) => {
-          // Every item in the values array is itself an array with a string key and a stringified value, i.e ['pushNotifications', 'false']
-          acc[curr[0]] = JSON.parse(curr[1]);
-          return acc;
-        }, {});
-        setPreferences(initialState);
-      } catch (e) {
-        Alert.alert(`An error occurred: ${e.message}`);
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   // Populating preferences from storage using AsyncStorage.multiGet
+  //   (async () => {
+  //     try {
+  //       const values = await AsyncStorage.multiGet(Object.keys(preferences));
+  //       const initialState = values.reduce((acc, curr) => {
+  //         // Every item in the values array is itself an array with a string key and a stringified value, i.e ['pushNotifications', 'false']
+  //         acc[curr[0]] = JSON.parse(curr[1]);
+  //         return acc;
+  //       }, {});
+  //       setPreferences(initialState);
+  //     } catch (e) {
+  //       Alert.alert(`An error occurred: ${e.message}`);
+  //     }
+  //   })();
+  // }, []);
 
   // This effect only runs when the preferences state updates, excluding initial mount
-  useUpdate(() => {
-    (async () => {
-      // Every time there is an update on the preference state, we persist it on storage
-      // The exercise requierement is to use multiSet API
-      const keyValues = Object.entries(preferences).map((entry) => {
-        return [entry[0], String(entry[1])];
-      });
-      try {
-        await AsyncStorage.multiSet(keyValues);
-      } catch (e) {
-        Alert.alert(`An error occurred: ${e.message}`);
-      }
-    })();
-  }, [preferences]);
-
-  const updateState = (key) => () =>
-    setPreferences((prevState) => ({
-      ...prevState,
-      [key]: !prevState[key],
-    }));
+  // useUpdate(() => {
+  //   (async () => {
+  //     // Every time there is an update on the preference state, we persist it on storage
+  //     // The exercise requierement is to use multiSet API
+  //     const keyValues = Object.entries(preferences).map((entry) => {
+  //       return [entry[0], String(entry[1])];
+  //     });
+  //     try {
+  //       await AsyncStorage.multiSet(keyValues);
+  //     } catch (e) {
+  //       Alert.alert(`An error occurred: ${e.message}`);
+  //     }
+  //   })();
+  // }, [preferences]);
 
   const handleLogout = () => {
     signOut();
@@ -118,31 +124,65 @@ export default function ProfileScreen() {
         <Text style={styles.header}>Personal Information</Text>
         <View style={styles.row}>
           <View style={[]}>
-            <View
-              style={[
-                {
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundColor: "grey",
-                  width: 150,
-                  height: 150,
-                  borderRadius: 75,
-                },
-              ]}
-            >
-              <Text style={styles.avatarText}>{initials}</Text>
-            </View>
+            {form.image ? (
+              <Image
+                source={{ uri: form.image }}
+                style={[
+                  {
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "grey",
+                    width: 150,
+                    height: 150,
+                    borderRadius: 75,
+                  },
+                ]}
+              />
+            ) : (
+              <View
+                style={[
+                  {
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    backgroundColor: "grey",
+                    width: 150,
+                    height: 150,
+                    borderRadius: 75,
+                  },
+                ]}
+              >
+                <Text style={styles.avatarText}>{initials}</Text>
+              </View>
+            )}
           </View>
           <View style={[styles.row, { gap: 10, alignItems: "center" }]}>
-            <Pressable style={[styles.button, { backgroundColor: "grey" }]}>
-              <Text style={styles.buttonText}>Change</Text>
-            </Pressable>
-            <Pressable style={[styles.button]}>
-              <Text style={[styles.buttonText, { color: "#000000" }]}>
-                Remove
-              </Text>
-            </Pressable>
+            {form.image ? (
+              <>
+                <Pressable
+                  onPress={pickImage}
+                  style={[styles.button, { backgroundColor: "grey" }]}
+                >
+                  <Text style={styles.buttonText}>Change</Text>
+                </Pressable>
+                <Pressable style={[styles.button]}>
+                  <Text
+                    onPress={removeImage}
+                    style={[styles.buttonText, { color: "#000000" }]}
+                  >
+                    Remove
+                  </Text>
+                </Pressable>
+              </>
+            ) : (
+              <Pressable
+                onPress={pickImage}
+                style={[styles.button, { backgroundColor: "grey" }]}
+              >
+                <Text style={styles.buttonText}>Upload image</Text>
+              </Pressable>
+            )}
           </View>
         </View>
       </View>
@@ -176,26 +216,33 @@ export default function ProfileScreen() {
         </View>
       </View>
       <View style={styles.container}>
-        <Text style={styles.header}>Account Preferences</Text>
+        <Text style={styles.header}>Email notifications</Text>
         <View style={styles.row}>
-          <Text style={styles.text}>Push notifications</Text>
-          <Switch
-            value={preferences.pushNotifications}
-            onValueChange={updateState("pushNotifications")}
+          <Text style={styles.text}>Order Statuses</Text>
+          <Checkbox
+            status={form.orderStatuses ? "checked" : "unchecked"}
+            onPress={() => handleChange("orderStatuses", !form.orderStatuses)}
           />
         </View>
         <View style={styles.row}>
-          <Text style={styles.text}>Marketing emails</Text>
-          <Switch
-            value={preferences.emailMarketing}
-            onValueChange={updateState("emailMarketing")}
+          <Text style={styles.text}>Password changes</Text>
+          <Checkbox
+            status={form.passwordChanges ? "checked" : "unchecked"}
+            onPress={() => handleChange("passwordChanges", !form.passwordChanges)}
           />
         </View>
         <View style={styles.row}>
-          <Text style={styles.text}>Latest news</Text>
-          <Switch
-            value={preferences.latestNews}
-            onValueChange={updateState("latestNews")}
+          <Text style={styles.text}>Special offers</Text>
+          <Checkbox
+            status={form.specialOffers ? "checked" : "unchecked"}
+            onPress={() => handleChange("specialOffers", !form.specialOffers)}
+          />
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.text}>Newsletter</Text>
+          <Checkbox
+            status={form.newsletter ? "checked" : "unchecked"}
+            onPress={() => handleChange("newsletter", !form.newsletter)}
           />
         </View>
         <Pressable

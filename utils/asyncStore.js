@@ -1,5 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+export const DEFAULT_STATE = {
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    email: "",
+    image: null,
+    orderStatuses: false,
+    passwordChanges: false,
+    specialOffers: false,
+    newsletter: false,
+};
+
 export const AUTH_KEY = "user";
 
 export const storeData = async (key, value) => {
