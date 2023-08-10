@@ -18,7 +18,9 @@ const RootNavigator = () => {
             isLoading: false,
             isSignedIn: true,
             firstName: action.firstName,
+            lastName: action.lastName,
             email: action.email,
+            phoneNumber: action.phoneNumber,
           };
         case "SIGN_OUT":
           return {
@@ -26,6 +28,8 @@ const RootNavigator = () => {
             isLoading: false,
             isSignedIn: false,
             firstName: "",
+            lastName: "",
+            phoneNumber: "",
             email: "",
           };
       }
@@ -34,6 +38,8 @@ const RootNavigator = () => {
       isLoading: true,
       isSignedIn: false,
       firstName: "",
+      lastName: "",
+      phoneNumber: "",
       email: "",
     }
   );
@@ -48,6 +54,8 @@ const RootNavigator = () => {
           dispatch({
             type: "SIGN_IN",
             firstName: userData.firstName,
+            lastName: data.lastName,
+            phoneNumber: data.phoneNumber,
             email: userData.email,
           });
         }
@@ -65,6 +73,8 @@ const RootNavigator = () => {
         dispatch({
           type: "SIGN_IN",
           firstName: data.firstName,
+          lastName: data.lastName,
+          phoneNumber: data.phoneNumber,
           email: data.email,
         });
       },
@@ -73,9 +83,12 @@ const RootNavigator = () => {
         dispatch({
           type: "SIGN_IN",
           firstName: data.firstName,
+          lastName: "",
+          phoneNumber: "",
           email: data.email,
         });
       },
+      userData: state
     }),
     [state]
   );
