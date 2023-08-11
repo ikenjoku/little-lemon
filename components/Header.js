@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     padding: 10,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#e9e8a2",
   },
   logo: {
     width: 50,

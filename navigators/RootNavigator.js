@@ -31,6 +31,8 @@ const RootNavigator = () => {
         case "SIGN_OUT":
           return {
             ...prevState,
+            isLoading: false,
+            isSignedIn: false,
             ...DEFAULT_STATE,
           };
         case "UPDATE_PROFILE":
@@ -56,7 +58,6 @@ const RootNavigator = () => {
 
       try {
         userData = await retrieveData(AUTH_KEY);
-        console.log("data in context🔥", userData);
         if (userData) {
           dispatch({
             ...userData,
@@ -68,7 +69,7 @@ const RootNavigator = () => {
           });
         }
       } catch (e) {
-        console.error("Could not retrieve user data", e);
+        console.log("Could not retrieve user data", e);
       }
     };
 

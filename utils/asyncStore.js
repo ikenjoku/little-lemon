@@ -21,7 +21,7 @@ export const storeData = async (key, value) => {
       JSON.stringify(value)
     );
   } catch (error) {
-    console.error(`Error saving ${key} data`);
+    console.log(`Error saving ${key} data`);
   }
 };
 
@@ -30,10 +30,9 @@ export const retrieveData = async (key) => {
     const value = await AsyncStorage.getItem(key);
     if (value !== null) {
       const data = JSON.parse(value);
-      console.log('data', data);
       return data;
     }
   } catch (error) {
-    console.error(`Error fetching ${key} data`, error);
+    console.log(`Error fetching ${key} data`, error);
   }
 };

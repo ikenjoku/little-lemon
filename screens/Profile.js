@@ -35,8 +35,6 @@ export default function ProfileScreen() {
       quality: 1,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
       handleChange("image", result.assets[0].uri);
     }
@@ -55,7 +53,7 @@ export default function ProfileScreen() {
           setForm(userData);
         }
       } catch (e) {
-        console.error("Could not retrieve user data", e);
+        console.log("Could not retrieve user data", e);
       }
     };
 

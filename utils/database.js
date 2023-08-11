@@ -27,12 +27,6 @@ export async function getMenuItems() {
 }
 
 export function saveMenuItems(menuItems) {
-  console.log('menuItems saveMenuItems ', menuItems);
-  console.log('menuItems saving ', `${menuItems
-   .map((item) =>
-     `('${item.id}', '${item.name}', '${item.price}', '${item.description}', '${item.image}', '${item.category}')`)
-      	.join(', ')}`)
-
   db.transaction((tx) => {
     tx.executeSql(`insert into menuitems (uuid, name, price, description, image, category) values ${menuItems
        .map((item) =>
@@ -42,7 +36,6 @@ export function saveMenuItems(menuItems) {
 }
 
 export async function filterByQueryAndCategories(query, activeCategories) {
-  console.log('query', query, 'activeCategories', activeCategories)
   let includedCategory = "";
   activeCategories.forEach((item, idx) => {
     includedCategory = includedCategory + `'${item}'`;

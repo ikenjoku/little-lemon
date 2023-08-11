@@ -25,10 +25,16 @@ const API_URL =
   "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json";
 const sections = ["starters", "mains", "desserts"];
 
-const Item = ({ name, price }) => (
+const Item = ({ name, price, image, description }) => (
   <View style={styles.item}>
-    <Text style={styles.title}>{name}</Text>
-    <Text style={styles.title}>${price}</Text>
+    <View style={{flex:1}}>
+      <Text style={{marginTop: 10, fontWeight: '900'}}>{name}</Text>
+      <Text style={{marginTop: 10}}>{description}</Text>
+      <Text style={{marginTop: 10, fontWeight: '600', color: '#4b3e52'}}>${price}</Text>
+    </View>
+    <View>
+      <Image style={{height: 50, width:50, borderRadius: 3}} source={{ uri: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${image}?raw=true` }} />
+    </View>
   </View>
 );
 
@@ -51,7 +57,7 @@ export default function Home({ navigation }) {
       }));
       return items;
     } catch (error) {
-      console.error("Error getting menu: ", error);
+      console.log("Error getting menu: ", error);
       return null;
     }
   };
@@ -71,9 +77,7 @@ export default function Home({ navigation }) {
 
         setData(menuItems);
       } catch (e) {
-        // Handle error
         console.log(e);
-        Alert.alert(e);
       }
     })();
   }, []);
@@ -189,11 +193,12 @@ export default function Home({ navigation }) {
         onChange={handleFiltersChange}
         sections={sections}
       />
+
       <FlatList
         style={styles.sectionList}
         data={data}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <Item name={item.name} price={item.price} />}
+        renderItem={({ item }) => <Item {...item}/>}
       />
     </SafeAreaView>
   );
@@ -203,7 +208,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
-    backgroundColor: "#495E57",
+    // backgroundColor: "#495E57",
+    backgroundColor: "#ffffff",
   },
   sectionList: {
     paddingHorizontal: 16,
@@ -218,7 +224,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: 16,
+    // paddingHorizontal: 10,
+    borderTopColor: "#B1A898",
+    borderTopWidth: 1,
+    gap: 5,
+    // backgroundColor:"#ffffff",
   },
   header: {
     fontSize: 24,

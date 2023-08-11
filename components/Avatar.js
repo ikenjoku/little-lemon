@@ -7,7 +7,7 @@ const Avatar = ({ width = 50, height = 50, radius = 25 }) => {
   const initials = `${userData.firstName?.[0] || ""}${
     userData.lastName?.[0] || ""
   }`.toUpperCase();
-  console.log('userData', userData)
+
   return (
     <View style={[]}>
       {userData.image ? (
