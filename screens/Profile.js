@@ -17,7 +17,12 @@ import * as ImagePicker from "expo-image-picker";
 
 import useUpdate from "../utils/useUpdate";
 import { AuthContext } from "../context/AuthContext";
-import { AUTH_KEY, retrieveData, storeData, DEFAULT_STATE } from "../utils/asyncStore";
+import {
+  AUTH_KEY,
+  retrieveData,
+  storeData,
+  DEFAULT_STATE,
+} from "../utils/asyncStore";
 import { validateUSPhoneNumber } from "../utils/validateUSPhoneNumber";
 
 export default function ProfileScreen() {
@@ -162,11 +167,13 @@ export default function ProfileScreen() {
               <>
                 <Pressable
                   onPress={pickImage}
-                  style={[styles.button, { backgroundColor: "grey" }]}
+                  style={[styles.button, { backgroundColor: "#3E524B" }]}
                 >
                   <Text style={styles.buttonText}>Change</Text>
                 </Pressable>
-                <Pressable style={[styles.button]}>
+                <Pressable
+                  style={[styles.button, { backgroundColor: "#ffffff" }]}
+                >
                   <Text
                     onPress={removeImage}
                     style={[styles.buttonText, { color: "#000000" }]}
@@ -178,7 +185,7 @@ export default function ProfileScreen() {
             ) : (
               <Pressable
                 onPress={pickImage}
-                style={[styles.button, { backgroundColor: "grey" }]}
+                style={[styles.button, { backgroundColor: "#3E524B" }]}
               >
                 <Text style={styles.buttonText}>Upload image</Text>
               </Pressable>
@@ -220,6 +227,7 @@ export default function ProfileScreen() {
         <View style={styles.row}>
           <Text style={styles.text}>Order Statuses</Text>
           <Checkbox
+            color="#4b3e52"
             status={form.orderStatuses ? "checked" : "unchecked"}
             onPress={() => handleChange("orderStatuses", !form.orderStatuses)}
           />
@@ -227,13 +235,17 @@ export default function ProfileScreen() {
         <View style={styles.row}>
           <Text style={styles.text}>Password changes</Text>
           <Checkbox
+            color="#4b3e52"
             status={form.passwordChanges ? "checked" : "unchecked"}
-            onPress={() => handleChange("passwordChanges", !form.passwordChanges)}
+            onPress={() =>
+              handleChange("passwordChanges", !form.passwordChanges)
+            }
           />
         </View>
         <View style={styles.row}>
           <Text style={styles.text}>Special offers</Text>
           <Checkbox
+            color="#4b3e52"
             status={form.specialOffers ? "checked" : "unchecked"}
             onPress={() => handleChange("specialOffers", !form.specialOffers)}
           />
@@ -241,6 +253,7 @@ export default function ProfileScreen() {
         <View style={styles.row}>
           <Text style={styles.text}>Newsletter</Text>
           <Checkbox
+            color="#4b3e52"
             status={form.newsletter ? "checked" : "unchecked"}
             onPress={() => handleChange("newsletter", !form.newsletter)}
           />

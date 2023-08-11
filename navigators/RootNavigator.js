@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OnboardingScreen from "../screens/Onboarding";
 import ProfileScreen from "../screens/Profile";
 import SplashScreen from "../screens/Splash";
+import HomeScreen from "../screens/Home";
 import { retrieveData, AUTH_KEY } from "../utils/asyncStore";
 import { AuthContext } from "../context/AuthContext";
 
@@ -101,7 +102,10 @@ const RootNavigator = () => {
     <AuthContext.Provider value={authContext}>
       <Stack.Navigator>
         {state.isSignedIn ? (
-          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <>
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+          </>
           ) : (
           <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         )}
