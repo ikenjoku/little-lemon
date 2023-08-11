@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Text,
   View,
@@ -8,11 +8,9 @@ import {
   ScrollView,
   TextInput,
   Image,
-  // Checkbox,
 } from "react-native";
 import Constants from "expo-constants";
 import { Checkbox } from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 
 import useUpdate from "../utils/useUpdate";
@@ -27,7 +25,7 @@ import { validateUSPhoneNumber } from "../utils/validateUSPhoneNumber";
 
 export default function ProfileScreen() {
   const [form, setForm] = React.useState(DEFAULT_STATE);
-  const { signOut } = React.useContext(AuthContext);
+  const { signOut, updateProfile } = React.useContext(AuthContext);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -64,39 +62,6 @@ export default function ProfileScreen() {
     getUserProfile();
   }, []);
 
-  // useEffect(() => {
-  //   // Populating preferences from storage using AsyncStorage.multiGet
-  //   (async () => {
-  //     try {
-  //       const values = await AsyncStorage.multiGet(Object.keys(preferences));
-  //       const initialState = values.reduce((acc, curr) => {
-  //         // Every item in the values array is itself an array with a string key and a stringified value, i.e ['pushNotifications', 'false']
-  //         acc[curr[0]] = JSON.parse(curr[1]);
-  //         return acc;
-  //       }, {});
-  //       setPreferences(initialState);
-  //     } catch (e) {
-  //       Alert.alert(`An error occurred: ${e.message}`);
-  //     }
-  //   })();
-  // }, []);
-
-  // This effect only runs when the preferences state updates, excluding initial mount
-  // useUpdate(() => {
-  //   (async () => {
-  //     // Every time there is an update on the preference state, we persist it on storage
-  //     // The exercise requierement is to use multiSet API
-  //     const keyValues = Object.entries(preferences).map((entry) => {
-  //       return [entry[0], String(entry[1])];
-  //     });
-  //     try {
-  //       await AsyncStorage.multiSet(keyValues);
-  //     } catch (e) {
-  //       Alert.alert(`An error occurred: ${e.message}`);
-  //     }
-  //   })();
-  // }, [preferences]);
-
   const handleLogout = () => {
     signOut();
   };
@@ -115,7 +80,7 @@ export default function ProfileScreen() {
     }
     const data = await retrieveData(AUTH_KEY);
     if (data) {
-      await storeData(AUTH_KEY, { ...data, ...form });
+      await updateProfile(data, form);
     }
     Alert.alert("Profile successfully updated!");
   };

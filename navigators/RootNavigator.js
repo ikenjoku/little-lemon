@@ -4,7 +4,12 @@ import OnboardingScreen from "../screens/Onboarding";
 import ProfileScreen from "../screens/Profile";
 import SplashScreen from "../screens/Splash";
 import HomeScreen from "../screens/Home";
-import { retrieveData, AUTH_KEY } from "../utils/asyncStore";
+import {
+  retrieveData,
+  AUTH_KEY,
+  storeData,
+  DEFAULT_STATE,
+} from "../utils/asyncStore";
 import { AuthContext } from "../context/AuthContext";
 
 const Stack = createNativeStackNavigator();
@@ -26,12 +31,12 @@ const RootNavigator = () => {
         case "SIGN_OUT":
           return {
             ...prevState,
-            isLoading: false,
-            isSignedIn: false,
-            firstName: "",
-            lastName: "",
-            phoneNumber: "",
-            email: "",
+            ...DEFAULT_STATE,
+          };
+        case "UPDATE_PROFILE":
+          return {
+            ...prevState,
+            ...action.payload,
           };
       }
     },
@@ -51,8 +56,10 @@ const RootNavigator = () => {
 
       try {
         userData = await retrieveData(AUTH_KEY);
+        console.log("data in context🔥", userData);
         if (userData) {
           dispatch({
+            ...userData,
             type: "SIGN_IN",
             firstName: userData.firstName,
             lastName: data.lastName,
@@ -89,7 +96,15 @@ const RootNavigator = () => {
           email: data.email,
         });
       },
-      userData: state
+      userData: state,
+      updateProfile: async (data, form) => {
+        const updatedProfile = { ...data, ...form };
+        await storeData(AUTH_KEY, updatedProfile);
+        dispatch({
+          type: "UPDATE_PROFILE",
+          payload: updatedProfile,
+        });
+      },
     }),
     [state]
   );
@@ -103,10 +118,14 @@ const RootNavigator = () => {
       <Stack.Navigator>
         {state.isSignedIn ? (
           <>
-            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="Home"
+              component={HomeScreen}
+            />
             <Stack.Screen name="Profile" component={ProfileScreen} />
           </>
-          ) : (
+        ) : (
           <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         )}
       </Stack.Navigator>

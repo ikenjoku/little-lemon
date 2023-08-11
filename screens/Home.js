@@ -3,7 +3,7 @@ import {
   Text,
   View,
   StyleSheet,
-  SectionList,
+  FlatList,
   SafeAreaView,
   StatusBar,
   Alert,
@@ -18,6 +18,7 @@ import {
 } from "../utils/database";
 import Filters from "../components/Filters";
 import { getSectionListData, useUpdateEffect } from "../utils/helpers";
+import Header from "../components/Header";
 
 const API_URL =
   "https://raw.githubusercontent.com/Meta-Mobile-Developer-PC/Working-With-Data-API/main/capstone.json";
@@ -30,7 +31,7 @@ const Item = ({ name, price }) => (
   </View>
 );
 
-export default function Home() {
+export default function Home({ navigation }) {
   const [data, setData] = useState([]);
   const [searchBarText, setSearchBarText] = useState("");
   const [query, setQuery] = useState("");
@@ -67,8 +68,8 @@ export default function Home() {
           saveMenuItems(menuItems);
         }
 
-        const sectionListData = getSectionListData(menuItems);
-        setData(sectionListData);
+
+        setData(menuItems);
       } catch (e) {
         // Handle error
         console.log(e);
@@ -91,8 +92,7 @@ export default function Home() {
           query,
           activeCategories
         );
-        const sectionListData = getSectionListData(menuItems);
-        setData(sectionListData);
+        setData(menuItems);
       } catch (e) {
         Alert.alert(e.message);
       }
@@ -118,6 +118,7 @@ export default function Home() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Header navigation={navigation} />
       <Searchbar
         placeholder="Search"
         placeholderTextColor="white"
@@ -133,14 +134,11 @@ export default function Home() {
         onChange={handleFiltersChange}
         sections={sections}
       />
-      <SectionList
+      <FlatList
         style={styles.sectionList}
-        sections={data}
+        data={data}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => <Item name={item.name} price={item.price} />}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={styles.header}>{title}</Text>
-        )}
       />
     </SafeAreaView>
   );
