@@ -1,10 +1,15 @@
-import { View, TouchableOpacity, Text, StyleSheet, ScrollView, SafeAreaView } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  ScrollView,
+} from "react-native";
 
 const Filters = ({ onChange, selections, sections }) => {
   return (
-    // <View style={{width: '100%'}}>
     <ScrollView horizontal style={{ height: 170 }}>
-      <View >
+      <View>
         <View style={{ paddingHorizontal: 10, backgroundColor: "#ffffff" }}>
           <Text
             style={{
@@ -26,7 +31,6 @@ const Filters = ({ onChange, selections, sections }) => {
                 onChange(index);
               }}
               style={{
-                // flex: 1 / sections.length,
                 justifyContent: "center",
                 alignItems: "center",
                 paddingVertical: 10,
@@ -47,8 +51,6 @@ const Filters = ({ onChange, selections, sections }) => {
         </View>
       </View>
     </ScrollView>
-
-    //  </View>
   );
 };
 

@@ -5,7 +5,6 @@ import {
   Image,
   StyleSheet,
   Pressable,
-  Alert,
   TextInput,
 } from "react-native";
 
@@ -28,13 +27,10 @@ const OnboardingScreen = ({ navigation }) => {
       [fieldName]: value,
     }));
   };
-  const handleSubscription = async () => {
+  const finishOnboarding = async () => {
     if (isValidForm) {
-      // Alert.alert("Leggo!");
       await storeData(AUTH_KEY, { isSignedIn: true, ...form });
-      // navigation.navigate("Profile");
       signIn(form);
-
     }
   };
 
@@ -71,7 +67,7 @@ const OnboardingScreen = ({ navigation }) => {
         />
         <Pressable
           disabled={!isValidForm}
-          onPress={handleSubscription}
+          onPress={finishOnboarding}
           style={[
             styles.button,
             !isValidForm

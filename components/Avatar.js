@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, Image, StyleSheet, Text } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 
@@ -19,9 +19,9 @@ const Avatar = ({ width = 50, height = 50, radius = 25 }) => {
               justifyContent: "center",
               alignItems: "center",
               backgroundColor: "grey",
-              width: width ,
-              height:  height ,
-              borderRadius:  radius ,
+              width: width,
+              height: height,
+              borderRadius: radius,
             },
           ]}
         />
@@ -33,9 +33,9 @@ const Avatar = ({ width = 50, height = 50, radius = 25 }) => {
               justifyContent: "center",
               alignItems: "center",
               backgroundColor: "grey",
-              width:  width ,
-              height:  height ,
-              borderRadius: radius ,
+              width: width,
+              height: height,
+              borderRadius: radius,
             },
           ]}
         >

@@ -27,13 +27,20 @@ const sections = ["starters", "mains", "desserts"];
 
 const Item = ({ name, price, image, description }) => (
   <View style={styles.item}>
-    <View style={{flex:1}}>
-      <Text style={{marginTop: 10, fontWeight: '900'}}>{name}</Text>
-      <Text style={{marginTop: 10}}>{description}</Text>
-      <Text style={{marginTop: 10, fontWeight: '600', color: '#4b3e52'}}>${price}</Text>
+    <View style={{ flex: 1 }}>
+      <Text style={{ marginTop: 10, fontWeight: "900" }}>{name}</Text>
+      <Text style={{ marginTop: 10 }}>{description}</Text>
+      <Text style={{ marginTop: 10, fontWeight: "600", color: "#4b3e52" }}>
+        ${price}
+      </Text>
     </View>
     <View>
-      <Image style={{height: 50, width:50, borderRadius: 3}} source={{ uri: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${image}?raw=true` }} />
+      <Image
+        style={{ height: 50, width: 50, borderRadius: 3 }}
+        source={{
+          uri: `https://github.com/Meta-Mobile-Developer-PC/Working-With-Data-API/blob/main/images/${image}?raw=true`,
+        }}
+      />
     </View>
   </View>
 );
@@ -67,9 +74,6 @@ export default function Home({ navigation }) {
       try {
         await createTable();
         let menuItems = await getMenuItems();
-        // The application only fetches the menu data once from a remote URL
-        // and then stores it into a SQLite database.
-        // After that, every application restart loads the menu from the database
         if (!menuItems.length) {
           const menuItems = await fetchData();
           saveMenuItems(menuItems);
@@ -85,7 +89,6 @@ export default function Home({ navigation }) {
   useUpdateEffect(() => {
     (async () => {
       const activeCategories = sections.filter((s, i) => {
-        // If all filters are deselected, all categories are active
         if (filterSelections.every((item) => item === false)) {
           return true;
         }
@@ -198,7 +201,7 @@ export default function Home({ navigation }) {
         style={styles.sectionList}
         data={data}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <Item {...item}/>}
+        renderItem={({ item }) => <Item {...item} />}
       />
     </SafeAreaView>
   );
@@ -208,14 +211,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: StatusBar.currentHeight,
-    // backgroundColor: "#495E57",
     backgroundColor: "#ffffff",
   },
   sectionList: {
     paddingHorizontal: 16,
   },
   searchBar: {
-    // marginBottom: 24,
     backgroundColor: "#495E57",
     shadowRadius: 0,
     shadowOpacity: 0,
@@ -224,11 +225,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    // paddingHorizontal: 10,
     borderTopColor: "#B1A898",
     borderTopWidth: 1,
     gap: 5,
-    // backgroundColor:"#ffffff",
   },
   header: {
     fontSize: 24,
