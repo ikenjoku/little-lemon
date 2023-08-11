@@ -3,7 +3,13 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OnboardingScreen from "../screens/Onboarding";
 import ProfileScreen from "../screens/Profile";
 import SplashScreen from "../screens/Splash";
-import { retrieveData, AUTH_KEY } from "../utils/asyncStore";
+import HomeScreen from "../screens/Home";
+import {
+  retrieveData,
+  AUTH_KEY,
+  storeData,
+  DEFAULT_STATE,
+} from "../utils/asyncStore";
 import { AuthContext } from "../context/AuthContext";
 
 const Stack = createNativeStackNavigator();
@@ -18,15 +24,21 @@ const RootNavigator = () => {
             isLoading: false,
             isSignedIn: true,
             firstName: action.firstName,
+            lastName: action.lastName,
             email: action.email,
+            phoneNumber: action.phoneNumber,
           };
         case "SIGN_OUT":
           return {
             ...prevState,
             isLoading: false,
             isSignedIn: false,
-            firstName: "",
-            email: "",
+            ...DEFAULT_STATE,
+          };
+        case "UPDATE_PROFILE":
+          return {
+            ...prevState,
+            ...action.payload,
           };
       }
     },
@@ -34,6 +46,8 @@ const RootNavigator = () => {
       isLoading: true,
       isSignedIn: false,
       firstName: "",
+      lastName: "",
+      phoneNumber: "",
       email: "",
     }
   );
@@ -46,13 +60,16 @@ const RootNavigator = () => {
         userData = await retrieveData(AUTH_KEY);
         if (userData) {
           dispatch({
+            ...userData,
             type: "SIGN_IN",
             firstName: userData.firstName,
+            lastName: data.lastName,
+            phoneNumber: data.phoneNumber,
             email: userData.email,
           });
         }
       } catch (e) {
-        console.error("Could not retrieve user data", e);
+        console.log("Could not retrieve user data", e);
       }
     };
 
@@ -65,6 +82,8 @@ const RootNavigator = () => {
         dispatch({
           type: "SIGN_IN",
           firstName: data.firstName,
+          lastName: data.lastName,
+          phoneNumber: data.phoneNumber,
           email: data.email,
         });
       },
@@ -73,7 +92,18 @@ const RootNavigator = () => {
         dispatch({
           type: "SIGN_IN",
           firstName: data.firstName,
+          lastName: "",
+          phoneNumber: "",
           email: data.email,
+        });
+      },
+      userData: state,
+      updateProfile: async (data, form) => {
+        const updatedProfile = { ...data, ...form };
+        await storeData(AUTH_KEY, updatedProfile);
+        dispatch({
+          type: "UPDATE_PROFILE",
+          payload: updatedProfile,
         });
       },
     }),
@@ -88,8 +118,15 @@ const RootNavigator = () => {
     <AuthContext.Provider value={authContext}>
       <Stack.Navigator>
         {state.isSignedIn ? (
-          <Stack.Screen name="Profile" component={ProfileScreen} />
-          ) : (
+          <>
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="Home"
+              component={HomeScreen}
+            />
+            <Stack.Screen name="Profile" component={ProfileScreen} />
+          </>
+        ) : (
           <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         )}
       </Stack.Navigator>

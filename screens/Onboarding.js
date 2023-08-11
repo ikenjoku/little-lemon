@@ -5,12 +5,11 @@ import {
   Image,
   StyleSheet,
   Pressable,
-  Alert,
   TextInput,
 } from "react-native";
 
 import { validateEmailRegex } from "../utils/validateEmailRegex";
-import { AUTH_KEY, storeData } from "../utils/asyncStore";
+import { AUTH_KEY, storeData, DEFAULT_STATE } from "../utils/asyncStore";
 import { AuthContext } from "../context/AuthContext";
 
 const validForm = ({ firstName, email }) => {
@@ -18,10 +17,7 @@ const validForm = ({ firstName, email }) => {
 };
 
 const OnboardingScreen = ({ navigation }) => {
-  const [form, setForm] = React.useState({
-    firstName: "",
-    email: "",
-  });
+  const [form, setForm] = React.useState(DEFAULT_STATE);
   const [isValidForm, setIsValidForm] = React.useState(false);
   const { signIn } = React.useContext(AuthContext);
 
@@ -31,13 +27,10 @@ const OnboardingScreen = ({ navigation }) => {
       [fieldName]: value,
     }));
   };
-  const handleSubscription = async () => {
+  const finishOnboarding = async () => {
     if (isValidForm) {
-      // Alert.alert("Leggo!");
       await storeData(AUTH_KEY, { isSignedIn: true, ...form });
-      // navigation.navigate("Profile");
       signIn(form);
-
     }
   };
 
@@ -74,7 +67,7 @@ const OnboardingScreen = ({ navigation }) => {
         />
         <Pressable
           disabled={!isValidForm}
-          onPress={handleSubscription}
+          onPress={finishOnboarding}
           style={[
             styles.button,
             !isValidForm
