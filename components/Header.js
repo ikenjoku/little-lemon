@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
 import Avatar from "./Avatar";
 

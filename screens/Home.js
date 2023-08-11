@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   StatusBar,
   Alert,
+  Image,
 } from "react-native";
 import { Searchbar } from "react-native-paper";
 import debounce from "lodash.debounce";
@@ -17,7 +18,7 @@ import {
   filterByQueryAndCategories,
 } from "../utils/database";
 import Filters from "../components/Filters";
-import { getSectionListData, useUpdateEffect } from "../utils/helpers";
+import { useUpdateEffect } from "../utils/helpers";
 import Header from "../components/Header";
 
 const API_URL =
@@ -67,7 +68,6 @@ export default function Home({ navigation }) {
           const menuItems = await fetchData();
           saveMenuItems(menuItems);
         }
-
 
         setData(menuItems);
       } catch (e) {
@@ -119,16 +119,71 @@ export default function Home({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} />
-      <Searchbar
-        placeholder="Search"
-        placeholderTextColor="white"
-        onChangeText={handleSearchChange}
-        value={searchBarText}
-        style={styles.searchBar}
-        iconColor="white"
-        inputStyle={{ color: "white" }}
-        elevation={0}
-      />
+      <View
+        style={{
+          backgroundColor: "#4b3e52",
+          paddingBottom: 24,
+          paddingLeft: 10,
+          paddingRight: 10,
+        }}
+      >
+        <View style={{}}>
+          <View style={{ marginBottom: 10 }}>
+            <Text
+              style={{
+                fontSize: 40,
+                color: "yellow",
+              }}
+            >
+              Litte Lemon
+            </Text>
+          </View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              marginBottom: 20,
+              gap: 10,
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={{ color: "white", textAlign: "auto" }}>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
+                vitae eros vitae tortor efficitur placerat at et orci. Maecenas
+                iaculis dignissim sem, non fringilla mi.
+              </Text>
+            </View>
+            <View
+              style={{
+                backgroundColor: "white",
+                padding: 10,
+                borderRadius: 10,
+              }}
+            >
+              <Image
+                style={{
+                  height: 100,
+                  width: 100,
+                  resizeMode: "contain",
+                  flex: 1,
+                }}
+                source={require("../assets/little-lemon-logo.png")}
+              />
+            </View>
+          </View>
+          <Searchbar
+            placeholder="Search"
+            placeholderTextColor="white"
+            onChangeText={handleSearchChange}
+            value={searchBarText}
+            style={styles.searchBar}
+            iconColor="white"
+            inputStyle={{ color: "white" }}
+            elevation={0}
+          />
+        </View>
+      </View>
       <Filters
         selections={filterSelections}
         onChange={handleFiltersChange}
@@ -154,7 +209,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   searchBar: {
-    marginBottom: 24,
+    // marginBottom: 24,
     backgroundColor: "#495E57",
     shadowRadius: 0,
     shadowOpacity: 0,

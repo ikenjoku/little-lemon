@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 
 const Filters = ({ onChange, selections, sections }) => {
   return (
@@ -11,16 +11,17 @@ const Filters = ({ onChange, selections, sections }) => {
           }}
           style={{
             flex: 1 / sections.length,
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: "center",
+            alignItems: "center",
             padding: 16,
-            backgroundColor: selections[index] ? '#EE9972' : '#495E57',
+            backgroundColor: selections[index] ? "#EE9972" : "#495E57",
             borderWidth: 1,
-            borderColor: 'white',
-          }}>
+            borderColor: "white",
+          }}
+        >
           <View>
-            <Text style={{ color: selections[index] ? 'black' : 'white' }}>
-              {section}
+            <Text style={{ color: selections[index] ? "black" : "white" }}>
+              {section[0].toUpperCase() + section.slice(1)}
             </Text>
           </View>
         </TouchableOpacity>
@@ -31,9 +32,9 @@ const Filters = ({ onChange, selections, sections }) => {
 
 const styles = StyleSheet.create({
   filtersContainer: {
-    backgroundColor: 'green',
-    flexDirection: 'row',
-    alignItems: 'center',
+    backgroundColor: "green",
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 16,
   },
 });
